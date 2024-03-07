@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Management Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="container mt-5">
+        <h1>Product Management Dashboard</h1>
+        
+        <div id="productForm">
+            <h2>Add a New Product</h2>
+            <input type="text" id="code" placeholder="Code (exactly 15 chars)" class="form-control"/>
+            <input type="text" id="name" placeholder="Name" class="form-control"/>
+            <input type="number" id="priceEur" placeholder="Price in EUR" class="form-control"/>
+            <input type="text" id="description" placeholder="Description" class="form-control"/>
+            <button onclick="addProduct()" class="btn btn-primary">Add Product</button>
+        </div>
+
+        <div id="productsList">
+            <h2>Products</h2>
+            <ul id="products" class="list-unstyled"></ul>
+        </div>
+
+        <div id="popularProducts">
+            <h2>Popular Products</h2>
+            <ul id="popular" class="list-unstyled"></ul>
+        </div>
+    </div>
+
+    <script>
+        function addProduct() {
+            // Implementation to add product
+        }
+        
+        function fetchProducts() {
+            // Implementation to fetch and display products
+        }
+
+        function fetchPopularProducts() {
+            // Implementation to fetch and display popular products
+        }
+
+        $(document).ready(function() {
+            fetchProducts();
+            fetchPopularProducts();
+        });
+    </script>
+</body>
+</html>
