@@ -1,13 +1,6 @@
 package InsightInflux.flux.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -38,10 +31,14 @@ public class Review {
     @Max(5)
     private Integer rating;
 
+    // Transient productId for JSON mapping
+    @Transient
+    private Long productId;
+
     // Default constructor
     public Review() {
     }
-    
+
     // Constructor
     public Review(Product product, String reviewer, String text, Integer rating) {
         this.product = product;
@@ -89,5 +86,13 @@ public class Review {
 
     public void setRating(Integer rating) {
         this.rating = rating;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Long productId) {
+        this.productId = productId;
     }
 }
