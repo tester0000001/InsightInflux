@@ -38,8 +38,19 @@ public class Review {
     @Max(5)
     private Integer rating;
 
-    // Standard getters and setters
+    // Default constructor
+    public Review() {
+    }
+    
+    // Constructor
+    public Review(Product product, String reviewer, String text, Integer rating) {
+        this.product = product;
+        this.reviewer = reviewer;
+        this.text = text;
+        this.rating = rating;
+    }
 
+    // Standard getters and setters
     public Long getId() {
         return id;
     }
