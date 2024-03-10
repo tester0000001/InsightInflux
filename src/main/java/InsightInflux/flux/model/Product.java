@@ -2,6 +2,9 @@ package InsightInflux.flux.model;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "products")
@@ -99,5 +102,19 @@ public class Product {
                 ", priceUsd=" + priceUsd +
                 ", description='" + description + '\'' +
                 '}';
+    }
+
+    // One-to-Many association with Review
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Review> reviews;
+
+    // Getters and Setters
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 }

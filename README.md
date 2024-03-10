@@ -74,9 +74,22 @@ Integrates with the HNB API for conversion of product prices between EUR and USD
 ## Search and Filter: 
 Offers functionality to search for products by code or name, with case-insensitive matching that includes partial matches.
 
+1. **Search product by code example via curl**
+   ```shell
+   curl -X GET http://localhost:9060/api/products?code=UniQ1
+
+2. **Search product by name example via curl**
+   ```shell
+   curl -X GET http://localhost:9060/api/products?name=SuPeR
+
 ## Popular Products: 
 An endpoint to identify and list the top three products based on their average review rating.
 
+1. **Top 3 popular Products read example via curl**
+   ```shell
+   curl -X GET http://localhost:9060/api/products/popular
+
+## H2 database preload
 On application startup, InsightInflux automatically preloads a predefined dataset 
 
 ## Access to h2 database via h2-console:

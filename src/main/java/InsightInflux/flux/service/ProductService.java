@@ -1,8 +1,10 @@
 package InsightInflux.flux.service;
 
 import InsightInflux.flux.model.Product;
+import InsightInflux.flux.dto.PopularProduct;
 import InsightInflux.flux.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import jakarta.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
@@ -35,10 +37,6 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public List<Product> findPopularProducts() {
-      
-        return null; // placeholder 
-    }
     public Product updateProduct(Long id, Product productDetails) {
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Product not found for this id :: " + id));
@@ -58,5 +56,9 @@ public class ProductService {
             .orElseThrow(() -> new EntityNotFoundException("Product not found for this id :: " + id));
         
         productRepository.delete(product);
+    }
+
+    public List<PopularProduct> findPopularProducts() {
+        return productRepository.findTopPopularProducts(PageRequest.of(0, 3));
     }
 }

@@ -1,6 +1,7 @@
 package InsightInflux.flux.controller;
 
 import InsightInflux.flux.model.Product;
+import InsightInflux.flux.dto.PopularProduct;
 import InsightInflux.flux.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,11 +36,6 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/popular")
-    public ResponseEntity<List<Product>> getPopularProducts() {
-        return ResponseEntity.ok(productService.findPopularProducts());
-    }
-
         @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product productDetails) {
         Product updatedProduct = productService.updateProduct(id, productDetails);
@@ -51,6 +47,14 @@ public class ProductController {
         productService.deleteProduct(id);
         Map<String, Boolean> response = new HashMap<>();
         response.put("deleted", Boolean.TRUE);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/popular")
+    public ResponseEntity<Map<String, List<PopularProduct>>> getPopularProducts() {
+        List<PopularProduct> popularProducts = productService.findPopularProducts();
+        Map<String, List<PopularProduct>> response = new HashMap<>();
+        response.put("popularProducts", popularProducts);
         return ResponseEntity.ok(response);
     }
 }
