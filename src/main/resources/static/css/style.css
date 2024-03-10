@@ -2,11 +2,10 @@
 body, h1, h2, ul, li {
     margin: 0;
     padding: 0;
+    font-family: 'SF Pro Text', 'SF Pro Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
-/* Apply a font */
 body {
-    font-family: 'SF Pro Text', 'SF Pro Icons', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     background-color: #e6e6ec;
     color: #1d1d1f;
     font-size: 16px;
@@ -34,7 +33,7 @@ h2 {
 }
 
 /* Form styling */
-#productForm {
+#productForm, #reviewForm {
     margin-bottom: 2rem;
 }
 
@@ -53,10 +52,7 @@ h2 {
 }
 
 /* Button styling */
-.btn-primary {
-    color: #fff;
-    background-color: #007bff;
-    border-color: #007bff;
+.btn-primary, .btn-secondary {
     padding: 0.375rem 0.75rem;
     border-radius: 0.25rem;
     font-size: 1rem;
@@ -64,9 +60,27 @@ h2 {
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
 }
 
+.btn-primary {
+    color: #fff;
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
 .btn-primary:hover {
     background-color: #0069d9;
     border-color: #0062cc;
+}
+
+.btn-secondary {
+    color: #fff;
+    background-color: #6c757d;
+    border-color: #6c757d;
+    margin-top: 0.5rem;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+    border-color: #545b62;
 }
 
 /* List styling */
@@ -83,4 +97,86 @@ ul.list-unstyled > li {
     border: 1px solid #ddd;
     padding: 0.5rem;
     margin-bottom: 0.5rem;
+}
+
+/* Review List Styling */
+.reviews, .review-list {
+    margin-top: 1rem;
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.review-item {
+    background-color: #f7f7f9;
+    border-left: 4px solid #007bff;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.review-item strong {
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+/* Exchange Rate Display */
+#exchangeRateContainer {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: #fff;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    text-align: center;
+}
+
+#exchangeRate {
+    font-size: 1.2rem;
+    color: #28a745;
+    margin-bottom: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .form-button-group {
+        flex-direction: column;
+    }
+}
+
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+.dark-mode .container {
+    background-color: #1e1e1e;
+}
+
+.dark-mode ul.list-unstyled > li,
+.dark-mode #exchangeRateContainer,
+.dark-mode .review-item {
+    background-color: #333;
+    border-color: #444;
+}
+
+.dark-mode .btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.dark-mode .btn-secondary {
+    background-color: #6c757d;
+    border-color: #6c757d;
+}
+
+.dark-mode #exchangeRate {
+    color: #4caf50;
+}
+
+#dark_mode_png {
+    display: block;
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 20px;
+    float: right; 
 }
