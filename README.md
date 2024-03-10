@@ -1,6 +1,17 @@
 # InsightInflux
 InsightInflux is a Spring Boot-based REST API for managing products and their reviews. Developed in Java 17 and utilizing Maven for project management, it integrates with the H2 in-memory database for storage. 
 
+#How to run the project
+
+1. **Run docker commands**
+   ```shell
+   docker build -t insightinflux .
+   docker run -p 9060:9060 insightinflux
+
+2. **Once started go to one of the endpoints**
+   http://localhost:9060/           - for frontend
+   http://localhost:9060/h2-console - for database
+   
 # Core Functionalities:
 
 ## Product Management: 
@@ -70,6 +81,9 @@ Allows for the posting and retrieval of product reviews, and a rating system alo
 
 ## Price Conversion: 
 Integrates with the HNB API for conversion of product prices between EUR and USD.
+
+Done by fetching "prodajni_tecaj" value from:
+https://api.hnb.hr/tecajn-eur/v3?valuta=USD
 
 ## Search and Filter: 
 Offers functionality to search for products by code or name, with case-insensitive matching that includes partial matches.
