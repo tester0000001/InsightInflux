@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import jakarta.persistence.EntityNotFoundException;
+
+
 
 @Service
 public class ReviewService {
@@ -31,5 +34,23 @@ public class ReviewService {
 
     public List<Review> findByProductId(Long productId) {
         return reviewRepository.findByProduct_Id(productId);
+    }
+
+    public Review updateReview(Long id, Review reviewDetails) {
+        Review review = reviewRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Review not found for this id :: " + id));
+        
+        review.setReviewer(reviewDetails.getReviewer());
+        review.setText(reviewDetails.getText());
+        review.setRating(reviewDetails.getRating());
+    
+        return reviewRepository.save(review);
+    }
+    
+    public void deleteReview(Long id) {
+        Review review = reviewRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Review not found for this id :: " + id));
+    
+        reviewRepository.delete(review);
     }
 }

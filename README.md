@@ -19,7 +19,22 @@ CRUD operations on products, creation, retrieval, updating, and deletion.
 
 2. **Product read example via curl**
    ```shell
-   curl -X GET http://localhost:9060/api/reviews
+   curl -X GET http://localhost:9060/api/products
+
+3. **Product update example via curl**
+   ```shell
+   curl -X PUT http://localhost:9060/api/products/1 \
+     -H 'Content-Type: application/json' \
+     -d '{
+         "code": "REG00001",
+         "name": "Regular Product",
+         "priceEur": 19.99,
+         "description": "This regular product does just what you need."
+     }'
+
+4. **Product delete example via curl**
+   ```shell
+   curl -X DELETE http://localhost:9060/api/products/1
 
 ## Review Handling: 
 Allows for the posting and retrieval of product reviews, and a rating system alongside textual feedback.
@@ -39,6 +54,20 @@ Allows for the posting and retrieval of product reviews, and a rating system alo
    ```shell
    curl -X GET http://localhost:9060/api/reviews
 
+3. **Review update example via curl**
+   ```shell
+   curl -X PUT http://localhost:9060/api/reviews/1 \
+   -H 'Content-Type: application/json' \
+   -d '{
+      "reviewer": "Pero",
+      "text": "Edit: died after a month. Disappointing!",
+      "rating": 1
+   }'
+
+4. **Review delete example via curl**
+   ```shell
+   curl -X DELETE http://localhost:9060/api/reviews/1
+
 ## Price Conversion: 
 Integrates with the HNB API for conversion of product prices between EUR and USD.
 
@@ -49,3 +78,15 @@ Offers functionality to search for products by code or name, with case-insensiti
 An endpoint to identify and list the top three products based on their average review rating.
 
 On application startup, InsightInflux automatically preloads a predefined dataset 
+
+## Access to h2 database via h2-console:
+To access database you can login via: http://localhost:9060/h2-console
+Access data is:
+   ```shell
+   Saved Settings:Generic H2 (Embedded)
+   Setting Name:Generic H2 (Embedded)
+   
+   Driver Class:org.h2.Driver
+   JDBC URL:jdbc:h2:mem:flux_db
+   User Name:pero
+   Password:pero1234!	

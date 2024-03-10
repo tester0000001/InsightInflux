@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/reviews")
@@ -36,5 +38,20 @@ public class ReviewController {
         } else {
             return ResponseEntity.badRequest().body(List.of()); 
         }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Review> updateReview(@PathVariable(value = "id") Long reviewId,
+                                            @RequestBody Review reviewDetails) {
+        Review updatedReview = reviewService.updateReview(reviewId, reviewDetails);
+        return ResponseEntity.ok(updatedReview);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Map<String, Boolean>> deleteReview(@PathVariable(value = "id") Long reviewId) {
+        reviewService.deleteReview(reviewId);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deleted", Boolean.TRUE);
+        return ResponseEntity.ok(response);
     }
 }
