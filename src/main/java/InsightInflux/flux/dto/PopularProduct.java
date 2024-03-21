@@ -1,10 +1,10 @@
 package InsightInflux.flux.dto;
 
-public class PopularProduct {
+public class PopularProductDto {
     private String name;
     private Double averageRating;
 
-    public PopularProduct(String name, Double averageRating) {
+    public PopularProductDto(String name, Double averageRating) {
         this.name = name;
         this.averageRating = Math.round(averageRating * 10.0) / 10.0;
     }

@@ -159,18 +159,40 @@ body.dark-mode {
     border-color: #444;
 }
 
+.dark-mode .form-control {
+    background-color: #262626;
+    color: #e0e0e0;
+    border-color: #333;
+}
+
 .dark-mode .btn-primary {
-    background-color: #007bff;
-    border-color: #007bff;
+    background-color: #006bb3;
+    border-color: #006bb3;
 }
 
 .dark-mode .btn-secondary {
-    background-color: #6c757d;
-    border-color: #6c757d;
+    background-color: #595f65;
+    border-color: #595f65;
 }
 
 .dark-mode #exchangeRate {
     color: #4caf50;
+}
+
+.dark-mode .btn-primary:hover {
+    background-color: #005fa1;
+    border-color: #005694;
+}
+
+.dark-mode .btn-secondary:hover {
+    background-color: #4e545a;
+    border-color: #484e53;
+}
+.dark-mode a {
+    color: #8ab4f8;
+}
+.dark-mode a:hover {
+    color: #7da2f0;
 }
 
 #dark_mode_png {
@@ -178,5 +200,5 @@ body.dark-mode {
     margin-top: 10px;
     margin-right: 10px;
     margin-bottom: 20px;
-    float: right; 
+    float: right;
 }

@@ -85,6 +85,10 @@ Integrates with the HNB API for conversion of product prices between EUR and USD
 Done by fetching "prodajni_tecaj" value from:
 https://api.hnb.hr/tecajn-eur/v3?valuta=USD
 
+1. **Available at /api/exchange-rate**
+   ```shell
+   curl -X GET http://localhost:9060/api/exchange-rate
+
 ## Search and Filter: 
 Offers functionality to search for products by code or name, with case-insensitive matching that includes partial matches.
 

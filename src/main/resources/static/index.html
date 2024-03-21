@@ -8,61 +8,62 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="container mt-5">
-        <!-- Dark Mode Toggle Button -->
-        <div id="darkModeToggle" style="position: fixed; top: 10px; right: 10px; z-index: 1000;">
-            <img src="image/dark_mode.png" alt="Toggle Dark Mode" style="cursor: pointer; width: 50px; margin-bottom: 20px;" />
-        </div>
-
-        <h1>Product Management Dashboard</h1>
-        
-        <!-- Add Product Form -->
-        <div id="productForm">
-            <h2>Add a New Product</h2>
-            <input type="text" id="code" placeholder="Code" class="form-control"/>
-            <input type="text" id="name" placeholder="Name" class="form-control"/>
-            <input type="number" id="priceEur" placeholder="Price in EUR" class="form-control"/>
-            <textarea id="description" placeholder="Description" class="form-control"></textarea>
-            <button onclick="addProduct()" class="btn btn-primary">Add Product</button>
-        </div>
-        
-        <!-- Exchange Rate Display -->
-        <div id="exchangeRateDisplay">
-            <h2>Current Exchange Rate</h2>
-            <p id="exchangeRate">EUR to USD: Loading...</p>
-        </div>
-
-        <!-- Add Review Form -->
-        <div id="reviewForm" style="display: none;">
-            <h2>Add a Review</h2>
-            <input type="hidden" id="productId" />
-            <input type="text" id="reviewer" placeholder="Reviewer Name" class="form-control"/>
-            <textarea id="reviewText" placeholder="Review Text" class="form-control"></textarea>
-            <input type="number" id="rating" placeholder="Rating (1-5)" class="form-control" min="1" max="5"/>
-            <button onclick="addReview()" class="btn btn-primary">Add Review</button>
-        </div>
-        
-        <!-- Search Form -->
-        <div id="searchContainer">
-            <input type="text" id="searchInput" placeholder="Search products by code" class="form-control" />
-            <button onclick="searchProducts()" class="btn btn-primary">Search</button>
-            <button onclick="toggleSearchMode()" id="toggleSearchModeBtn" class="btn btn-secondary">Search by Name</button>
-        </div>
-
-        <!-- Products List -->
-        <div id="productsList">
-            <h2>Products</h2>
-            <ul id="products" class="list-unstyled"></ul>
-        </div>
-
-        <!-- Popular Products -->
-        <div id="popularProducts">
-            <h2>Popular Products</h2>
-            <ul id="popular" class="list-unstyled"></ul>
-        </div>
+<div class="container mt-5">
+    <!-- Dark Mode Toggle Button -->
+    <div id="darkModeToggle" style="position: fixed; top: 10px; right: 10px; z-index: 1000;">
+        <img src="image/dark_mode.png" alt="Toggle Dark Mode"
+             style="cursor: pointer; width: 50px; margin-bottom: 20px;"/>
     </div>
 
-    <!-- Link to the JavaScript file -->
-    <script src="app.js"></script>
+    <h1>Product Management Dashboard</h1>
+
+    <!-- Add Product Form -->
+    <div id="productForm">
+        <h2>Add a New Product</h2>
+        <input type="text" id="code" placeholder="Code" class="form-control"/>
+        <input type="text" id="name" placeholder="Name" class="form-control"/>
+        <input type="number" id="priceEur" placeholder="Price in EUR" class="form-control"/>
+        <textarea id="description" placeholder="Description" class="form-control"></textarea>
+        <button onclick="addProduct()" class="btn btn-primary">Add Product</button>
+    </div>
+
+    <!-- Exchange Rate Display -->
+    <div id="exchangeRateDisplay">
+        <h2>Current Exchange Rate</h2>
+        <p id="exchangeRate">EUR to USD: Loading...</p>
+    </div>
+
+    <!-- Add Review Form -->
+    <div id="reviewForm" style="display: none;">
+        <h2>Add a Review</h2>
+        <input type="hidden" id="productId"/>
+        <input type="text" id="reviewer" placeholder="Reviewer Name" class="form-control"/>
+        <textarea id="reviewText" placeholder="Review Text" class="form-control"></textarea>
+        <input type="number" id="rating" placeholder="Rating (1-5)" class="form-control" min="1" max="5"/>
+        <button onclick="addReview()" class="btn btn-primary">Add Review</button>
+    </div>
+
+    <!-- Search Form -->
+    <div id="searchContainer">
+        <input type="text" id="searchInput" placeholder="Search products by code" class="form-control"/>
+        <button onclick="searchProducts()" class="btn btn-primary">Search</button>
+        <button onclick="toggleSearchMode()" id="toggleSearchModeBtn" class="btn btn-secondary">Search by Name</button>
+    </div>
+
+    <!-- Products List -->
+    <div id="productsList">
+        <h2>Products</h2>
+        <ul id="products" class="list-unstyled"></ul>
+    </div>
+
+    <!-- Popular Products -->
+    <div id="popularProducts">
+        <h2>Popular Products</h2>
+        <ul id="popular" class="list-unstyled"></ul>
+    </div>
+</div>
+
+<!-- Link to the JavaScript file -->
+<script src="app.js"></script>
 </body>
 </html>

@@ -1,24 +1,43 @@
 package InsightInflux.flux.controller;
 
-import org.springframework.http.HttpStatus;
+import InsightInflux.flux.dto.ExchangeRateDto;
+import InsightInflux.flux.service.CurrencyExchangeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
 @RestController
 public class ExchangeRateController {
 
+    private final CurrencyExchangeService currencyExchangeService;
+
+    @Autowired
+    public ExchangeRateController(CurrencyExchangeService currencyExchangeService) {
+        this.currencyExchangeService = currencyExchangeService;
+    }
+
     @GetMapping("/api/exchange-rate")
-    public ResponseEntity<String> getExchangeRate() {
-        String url = "https://api.hnb.hr/tecajn-eur/v3?valuta=USD";
-        RestTemplate restTemplate = new RestTemplate();
-        try {
-            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-            return ResponseEntity.ok(response.getBody());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("{\"error\": \"Failed to fetch exchange rate.\"}");
-        }
+    @Operation(
+            summary = "Get current exchange rate",
+            description = "Fetches the current exchange rate from EUR to USD.",
+            tags = { "Exchange Rate" }
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "Exchange rate successfully retrieved",
+            content = @Content(
+                    mediaType = "application/json",
+                    schema = @Schema(implementation = ExchangeRateDto.class)
+            )
+    )
+    @ApiResponse(responseCode = "500", description = "Failed to fetch exchange rate")
+    public ResponseEntity<ExchangeRateDto> getExchangeRate() {
+        ExchangeRateDto exchangeRateDto = currencyExchangeService.getExchangeRateDto();
+        return ResponseEntity.ok(exchangeRateDto);
     }
 }

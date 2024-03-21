@@ -1,6 +1,6 @@
 package InsightInflux.flux.repository;
 
-import InsightInflux.flux.dto.PopularProduct;
+import InsightInflux.flux.dto.PopularProductDto;
 import InsightInflux.flux.model.Product;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,9 +18,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p WHERE p.code LIKE %:searchTerm% OR p.name LIKE %:searchTerm%")
     List<Product> findByCodeOrNameContainingIgnoreCase(@Param("searchTerm") String searchTerm);
     
-    @Query("SELECT new InsightInflux.flux.dto.PopularProduct(p.name, AVG(r.rating)) " +
+    @Query("SELECT new InsightInflux.flux.dto.PopularProductDto(p.name, AVG(r.rating)) " +
     "FROM Product p JOIN p.reviews r " +
     "GROUP BY p.id " +
     "ORDER BY AVG(r.rating) DESC, COUNT(r) DESC")
-    List<PopularProduct> findTopPopularProducts(Pageable pageable);
+    List<PopularProductDto> findTopPopularProducts(Pageable pageable);
 }

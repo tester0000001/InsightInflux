@@ -1,11 +1,12 @@
 package InsightInflux.flux.service;
 
+import InsightInflux.flux.dto.ExchangeRateDto;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import jakarta.annotation.PostConstruct;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.concurrent.Executors;
@@ -20,6 +21,9 @@ public class CurrencyExchangeService {
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final String apiUrl = "https://api.hnb.hr/tecajn-eur/v3?valuta=USD";
 
+    public CurrencyExchangeService() {
+    }
+
     @PostConstruct
     public void init() {
         ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
@@ -28,23 +32,23 @@ public class CurrencyExchangeService {
 
     private void updateExchangeRate() {
         try {
-            ResponseEntity<String> response = restTemplate.getForEntity(apiUrl, String.class);
-            JsonNode root = objectMapper.readTree(response.getBody());
-            String rateStr = root.path(0).path("srednji_tecaj").asText().replace(",", ".");
+            var response = restTemplate.getForObject(apiUrl, String.class);
+            JsonNode root = objectMapper.readTree(response);
+            var rateStr = root.path(0).path("srednji_tecaj").asText().replace(",", ".");
             exchangeRate = new BigDecimal(rateStr).setScale(4, RoundingMode.HALF_UP);
         } catch (Exception e) {
-            e.printStackTrace(); 
+            e.printStackTrace();
         }
-        rateUpdated = true;
     }
 
-    public BigDecimal convertEurToUsd(BigDecimal priceInEur) {
-        return priceInEur.multiply(exchangeRate);
+    public ExchangeRateDto getExchangeRateDto() {
+        ensureRateIsUpdated();
+        return new ExchangeRateDto(exchangeRate, "USD");
     }
-    
+
     private volatile boolean rateUpdated = false;
 
-    public void ensureRateIsUpdated() {
+    private void ensureRateIsUpdated() {
         if (!rateUpdated) {
             updateExchangeRate();
         }

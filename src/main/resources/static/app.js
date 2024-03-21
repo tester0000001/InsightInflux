@@ -1,5 +1,4 @@
-let searchByCode = true;
-
+let searchByCode = false;
 function addProduct() {
     // Gather data from form fields
     var code = document.getElementById('code').value;
@@ -30,6 +29,7 @@ function addProduct() {
     }).then(data => {
         console.log(data);
         fetchProducts(); // Refresh the list of products
+        fetchPopularProducts();
     }).catch(error => {
         console.error(error);
     });
@@ -41,12 +41,9 @@ function fetchPopularProducts() {
             return response.json();
         }
         throw new Error('Request failed!');
-    }).then(response => {
+    }).then(popularProducts => {
         const popularProductsElement = document.getElementById('popular');
         popularProductsElement.innerHTML = '';
-        
-        const popularProducts = response.popularProducts;
-
         if (popularProducts && popularProducts.length) {
             popularProducts.forEach(product => {
                 const li = document.createElement('li');
@@ -91,7 +88,9 @@ function addReview() {
         throw new Error('Request failed!');
     }).then(data => {
         console.log(data);
-        fetchProducts(); 
+        fetchProducts();
+        fetchPopularProducts();
+        fetchReviews(productId);
     }).catch(error => {
         console.error(error);
     });
@@ -147,7 +146,7 @@ function fetchProducts() {
                 <ul class="reviews"></ul>
             `;
             productsListElement.appendChild(li);
-            fetchReviews(product.id); 
+            fetchReviews(product.id);
         });
     }).catch(error => {
         console.error(error);
@@ -163,8 +162,9 @@ function fetchExchangeRate() {
     fetch('/api/exchange-rate')
         .then(response => response.json())
         .then(data => {
-            const exchangeRate = parseFloat(data[0].srednji_tecaj.replace(',', '.'));
-            document.getElementById('exchangeRate').textContent = `EUR to USD: ${exchangeRate.toFixed(4)}`;
+            const exchangeRate = data.rate;
+            const currency = data.currency;
+            document.getElementById('exchangeRate').textContent = `EUR to ${currency}: ${exchangeRate.toFixed(4)}`;
         })
         .catch(error => {
             console.error('There has been a problem with your fetch operation:', error);
@@ -173,12 +173,12 @@ function fetchExchangeRate() {
 }
 
 // Toggle dark mode
-document.getElementById('darkModeToggle').addEventListener('click', function() {
+document.getElementById('darkModeToggle').addEventListener('click', function () {
     document.body.classList.toggle('dark-mode');
 });
 
-// Save dark mode preference 
-document.getElementById('darkModeToggle').addEventListener('click', function() {
+// Save dark mode preference
+document.getElementById('darkModeToggle').addEventListener('click', function () {
     const isDarkMode = document.body.classList.contains('dark-mode');
     localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
 });
@@ -195,9 +195,9 @@ function searchProducts() {
     var queryParam = searchByCode ? `code=${searchTerm}` : `name=${searchTerm}`;
 
     fetch(`/api/products?${queryParam}`).then(response => response.json())
-    .then(products => {
-        updateProductList(products);
-    }).catch(error => {
+        .then(products => {
+            updateProductList(products);
+        }).catch(error => {
         console.error('Error searching for products:', error);
     });
 }
@@ -207,26 +207,29 @@ function toggleSearchMode() {
     document.getElementById('toggleSearchModeBtn').textContent = searchByCode ? 'Search by Code' : 'Search by Name';
 }
 
-
 function updateProductList(products) {
     const productsListElement = document.getElementById('products');
     productsListElement.innerHTML = ''; // Clear current products list
+
     products.forEach(product => {
         const li = document.createElement('li');
         li.className = 'product-item';
+        li.setAttribute('data-product-id', product.id);
         li.innerHTML = `
             <strong>${product.name}</strong>
             <p>Code: ${product.code}</p>
-            <p>Price: €${product.priceEur.toFixed(2)} / $${product.priceUsd.toFixed(2)}</p>
+            <p>Price: €${parseFloat(product.priceEur).toFixed(2)} / $${parseFloat(product.priceUsd).toFixed(2)}</p>
             <p>${product.description}</p>
+            <button onclick="showReviewForm(${product.id})" class="btn btn-secondary">Add Review</button>
+            <ul class="reviews"></ul>
         `;
         productsListElement.appendChild(li);
     });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('toggleSearchModeBtn').textContent = searchByCode ? 'Search by Code' : 'Search by Name';
     fetchProducts();
     fetchPopularProducts();
     fetchExchangeRate();
 });
-
