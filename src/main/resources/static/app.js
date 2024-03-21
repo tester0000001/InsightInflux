@@ -173,12 +173,12 @@ function fetchExchangeRate() {
 }
 
 // Toggle dark mode
-document.getElementById('darkModeToggle').addEventListener('click', function () {
+document.getElementById('darkModeToggle').addEventListener('click', function() {
     document.body.classList.toggle('dark-mode');
 });
 
 // Save dark mode preference
-document.getElementById('darkModeToggle').addEventListener('click', function () {
+document.getElementById('darkModeToggle').addEventListener('click', function() {
     const isDarkMode = document.body.classList.contains('dark-mode');
     localStorage.setItem('darkMode', isDarkMode ? 'enabled' : 'disabled');
 });
@@ -227,7 +227,7 @@ function updateProductList(products) {
     });
 }
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('toggleSearchModeBtn').textContent = searchByCode ? 'Search by Code' : 'Search by Name';
     fetchProducts();
     fetchPopularProducts();
