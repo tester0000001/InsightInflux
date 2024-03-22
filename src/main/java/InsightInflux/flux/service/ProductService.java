@@ -1,8 +1,11 @@
 package InsightInflux.flux.service;
 
 import InsightInflux.flux.dto.ExchangeRateDto;
-import InsightInflux.flux.model.Product;
 import InsightInflux.flux.dto.PopularProductDto;
+import InsightInflux.flux.dto.ProductDTO;
+import InsightInflux.flux.dto.ReviewDTO;
+import InsightInflux.flux.model.Product;
+import InsightInflux.flux.model.Review;
 import InsightInflux.flux.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -12,6 +15,9 @@ import jakarta.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.Map;
+import java.util.HashMap;
 
 @Service
 public class ProductService {
@@ -22,73 +28,107 @@ public class ProductService {
     @Autowired
     private CurrencyExchangeService currencyExchangeService;
 
-    public Product createProduct(Product product) {
-        ExchangeRateDto exchangeRateDto = currencyExchangeService.getExchangeRateDto();
-        BigDecimal priceInUsd = product.getPriceEur().multiply(exchangeRateDto.getRate()).setScale(2, RoundingMode.HALF_UP);
-        product.setPriceUsd(priceInUsd);
+    public ProductDTO createProduct(ProductDTO productDTO) {
+        ExchangeRateDto exchangeRate = currencyExchangeService.getExchangeRateDto();
+        BigDecimal priceInUsd = productDTO.getPriceEur().multiply(exchangeRate.getRate()).setScale(2, RoundingMode.HALF_UP);
+        productDTO.setPriceUsd(priceInUsd);
 
-        return productRepository.save(product);
+        Product product = convertToProductEntity(productDTO);
+        product = productRepository.save(product);
+        return convertToProductDTO(product);
     }
 
-    public List<Product> findByCodeContainingIgnoreCase(String code) {
-
-        return productRepository.findByCodeContainingIgnoreCase(code);
-    }
-
-    public List<Product> findByNameContainingIgnoreCase(String name) {
-
-        return productRepository.findByNameContainingIgnoreCase(name);
-    }
-
-    public List<Product> findAllProducts() {
-        return productRepository.findAll();
-    }
-
-    public List<Product> findProducts(String code, String name) {
+    public List<ProductDTO> findProducts(String code, String name) {
+        List<Product> products;
         if (code != null && !code.trim().isEmpty()) {
-
-            return findByCodeContainingIgnoreCase(code);
-
+            products = productRepository.findByCodeContainingIgnoreCase(code);
         } else if (name != null && !name.trim().isEmpty()) {
-
-            return findByNameContainingIgnoreCase(name);
-
+            products = productRepository.findByNameContainingIgnoreCase(name);
         } else {
-
-            return findAllProducts();
+            products = productRepository.findAll();
         }
+        return products.stream().map(this::convertToProductDTO).collect(Collectors.toList());
     }
 
-    public Product updateProduct(Long id, Product productDetails) {
+    public ProductDTO updateProduct(Long id, ProductDTO productDTO) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Product not found for this id :: " + id));
 
-        product.setCode(productDetails.getCode());
-        product.setName(productDetails.getName());
-        product.setPriceEur(productDetails.getPriceEur());
-        product.setDescription(productDetails.getDescription());
-
-        ExchangeRateDto exchangeRateDto = currencyExchangeService.getExchangeRateDto();
-        BigDecimal priceInUsd = productDetails.getPriceEur().multiply(exchangeRateDto.getRate()).setScale(2, RoundingMode.HALF_UP);
-        product.setPriceUsd(priceInUsd);
-
-        return productRepository.save(product);
+        updateProductEntityWithDTO(product, productDTO);
+        product = productRepository.save(product);
+        return convertToProductDTO(product);
     }
 
+    public Map<String, Boolean> deleteProduct(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Product not found for this id :: " + id));
 
-    public boolean deleteProduct(Long id) {
-
-        return productRepository.findById(id)
-                .map(product -> {
-                    productRepository.delete(product);
-
-                    return true;
-                }).orElse(false);
+        productRepository.delete(product);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deleted", true);
+        return response;
     }
 
     public List<PopularProductDto> findPopularProducts() {
-
         return productRepository.findTopPopularProducts(PageRequest.of(0, 3));
+    }
+
+    private ProductDTO convertToProductDTO(Product product) {
+        List<ReviewDTO> reviewDTOs = product.getReviews().stream()
+                .map(review -> new ReviewDTO(
+                        review.getId(),
+                        review.getProduct().getId(),
+                        review.getReviewer(),
+                        review.getText(),
+                        review.getRating()))
+                .collect(Collectors.toList());
+
+        return new ProductDTO(
+                product.getId(),
+                product.getCode(),
+                product.getName(),
+                product.getPriceEur(),
+                product.getPriceUsd(),
+                product.getDescription(),
+                reviewDTOs
+        );
+    }
+
+    private Product convertToProductEntity(ProductDTO dto) {
+        Product product = new Product();
+        product.setId(dto.getId());
+        product.setCode(dto.getCode());
+        product.setName(dto.getName());
+        product.setPriceEur(dto.getPriceEur());
+        product.setPriceUsd(dto.getPriceUsd());
+        product.setDescription(dto.getDescription());
+        if (dto.getReviews() != null) {
+            product.setReviews(dto.getReviews().stream().map(this::convertToReviewEntity).collect(Collectors.toList()));
+        }
+        return product;
+    }
+
+    private void updateProductEntityWithDTO(Product product, ProductDTO dto) {
+        product.setCode(dto.getCode());
+        product.setName(dto.getName());
+        product.setPriceEur(dto.getPriceEur());
+        product.setDescription(dto.getDescription());
+        ExchangeRateDto exchangeRate = currencyExchangeService.getExchangeRateDto();
+        product.setPriceUsd(dto.getPriceEur().multiply(exchangeRate.getRate()).setScale(2, RoundingMode.HALF_UP));
+    }
+
+    private Review convertToReviewEntity(ReviewDTO dto) {
+        Review review = new Review();
+        review.setId(dto.getId());
+        review.setReviewer(dto.getReviewer());
+        review.setText(dto.getText());
+        review.setRating(dto.getRating());
+        if (dto.getProductId() != null) {
+            Product product = new Product();
+            product.setId(dto.getProductId());
+            review.setProduct(product);
+        }
+        return review;
     }
 
     public Product createAndSaveProduct(String code, String name, BigDecimal priceEur, String description) {
@@ -105,5 +145,4 @@ public class ProductService {
 
         return productRepository.save(product);
     }
-
 }

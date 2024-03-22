@@ -160,7 +160,12 @@ function showReviewForm(productId) {
 
 function fetchExchangeRate() {
     fetch('/api/exchange-rate')
-        .then(response => response.json())
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            }
+            throw new Error('Failed to fetch exchange rate');
+        })
         .then(data => {
             const exchangeRate = data.rate;
             const currency = data.currency;
